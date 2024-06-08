@@ -31,7 +31,6 @@ public class ProductController {
         Product createdProduct = productService.createProduct(product);  // 假设该方法返回完整的 Product 对象
         System.out.println(createdProduct);
 
-
         // 检查创建是否成功 (根据实际需求添加)
         if (createdProduct != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);

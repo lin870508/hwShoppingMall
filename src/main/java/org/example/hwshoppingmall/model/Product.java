@@ -1,6 +1,6 @@
 package org.example.hwshoppingmall.model;
 
-import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data

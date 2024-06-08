@@ -1,9 +1,11 @@
 package org.example.hwshoppingmall.model;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data
 public class Order {
+    @TableId
     private Integer orderId; //訂單編號
     private Integer memberId; //會員編號
     private Integer price; //訂單金額

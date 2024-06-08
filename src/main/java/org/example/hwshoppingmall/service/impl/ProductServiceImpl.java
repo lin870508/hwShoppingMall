@@ -19,6 +19,7 @@ private ProductDao productDao;
 
     @Override
     public Product createProduct(Product product) {
+        productDao.insert(product);
         return product;
     }
 }
