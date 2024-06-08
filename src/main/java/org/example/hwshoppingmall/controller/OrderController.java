@@ -1,5 +1,6 @@
 package org.example.hwshoppingmall.controller;
 
+import org.example.hwshoppingmall.dto.CreateOrderRequest;
 import org.example.hwshoppingmall.model.Order;
 import org.example.hwshoppingmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,12 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/users/{memberID}/orders")
-    public ResponseEntity<?> createdOrder(@PathVariable("memberID") Integer memberID,
-                                          @RequestBody @Valid Order order) {
-        Integer memberId = memberID;
+    public ResponseEntity<?> createdOrder(@PathVariable Integer memberID,
+                                          @RequestBody @Valid CreateOrderRequest createOrderRequest) {
+        String orderId = orderService.createOrder(memberID, createOrderRequest);
+
+        Order order = orderService.getOrderById(orderId);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
 
     }

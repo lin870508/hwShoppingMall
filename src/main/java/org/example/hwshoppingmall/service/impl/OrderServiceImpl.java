@@ -1,5 +1,6 @@
 package org.example.hwshoppingmall.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.hwshoppingmall.dao.OrderDao;
 import org.example.hwshoppingmall.dao.OrderDetailDao;
 import org.example.hwshoppingmall.dao.ProductDao;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl extends ServiceImpl<OrderDetailDao, OrderDetail> implements OrderService {
 
 
     @Autowired
@@ -37,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public Integer createOrder(Integer memberId, CreateOrderRequest createOrderRequest) {
+    public String createOrder(Integer memberId, CreateOrderRequest createOrderRequest)  {
         int totalAmount = 0;
         List<OrderDetail> orderDetailList = new ArrayList<>();
 
@@ -64,34 +65,42 @@ public class OrderServiceImpl implements OrderService {
             int amount = buyItem.getQuantity() * product.getPrice();
             totalAmount = totalAmount + amount;
 
-            // 轉換 BuyItem to OrderItem
+            // 轉換 BuyItem to orderDetail
             OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrderId(createOrderRequest.getOrderId());
             orderDetail.setProductId(buyItem.getProductId());
             orderDetail.setQuantity(buyItem.getQuantity());
             orderDetail.setStandPrice(product.getPrice());
             orderDetail.setItemPrice(amount);
-
             orderDetailList.add(orderDetail);
+
+            System.out.println(orderDetail);
 
         }
 
         // 創建訂單
-        Order order = new Order();
-        order.setMemberId(memberId);
-        order.setPrice(totalAmount);
-        order.setPayStatus(0);
-        Integer orderId = orderDao.insert(order);
+        Order order1 = new Order();
+        order1.setOrderId(createOrderRequest.getOrderId());
+        order1.setMemberId(memberId);
+        order1.setPrice(totalAmount);
+        order1.setPayStatus(0);
+        System.out.println(order1);
 
-//        orderDetailDao.insertBatch(orderDetailList);
+        orderDao.insert(order1);
+        System.out.println(orderDetailList);
+        String orderId = order1.getOrderId();
+        insertOrderDetails(orderDetailList);
 
         return orderId;
     }
-
-
+    @Override
+    public void insertOrderDetails(List<OrderDetail> orderDetailList) {
+        saveBatch(orderDetailList);
+    }
 
     @Override
-    public Order getOrderById(Integer orderId) {
-        Order order=orderDao.selectById(orderId);
+    public Order getOrderById(String orderId) {
+        Order order = orderDao.selectById(orderId);
         return order;
     }
 

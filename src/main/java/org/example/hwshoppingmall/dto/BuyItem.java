@@ -6,8 +6,10 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class BuyItem {
+
+
     @NotNull
-    private Integer productId;
+    private String productId;
 
     @NotNull
     private Integer quantity;
